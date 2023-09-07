@@ -36,8 +36,13 @@ dotnet restore
 
 Write-Host "Initialising repo" -ForegroundColor Green
 Remove-Item .\.git\ -Recurse -Force
-git init
-git branch -M main
+try {
+    git init
+    git branch -M main
+}
+catch {
+    Write-Host "Unable to initialise git repo - do you have GIT installed?" -ForegroundColor Red
+}
 Set-Content .gitignore (Invoke-WebRequest -UseBasicParsing -Uri "https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,react").Content
 
 Write-Host "Finishing up" -ForegroundColor Green
