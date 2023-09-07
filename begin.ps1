@@ -31,6 +31,9 @@ dotnet add reference ../Domain/Domain.csproj
 #TODO: Add test project here
 Set-Location ../../
 
+Write-Host "Adding NuGet packages" -ForegroundColor Green
+dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.Sqlite
+
 Write-Host "Executing dotnet restore" -ForegroundColor Green
 dotnet restore
 
