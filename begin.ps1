@@ -32,7 +32,9 @@ dotnet add reference ../Domain/Domain.csproj
 Set-Location ../../
 
 Write-Host "Adding NuGet packages" -ForegroundColor Green
-dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.Sqlite
+$nugetSource = "https://api.nuget.org/v3/index.json
+dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.Sqlite -s $nugetSource
+dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 
 Write-Host "Executing dotnet restore" -ForegroundColor Green
 dotnet restore
