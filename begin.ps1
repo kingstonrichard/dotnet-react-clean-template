@@ -1,3 +1,7 @@
+while (($dataProvider -ne "Sqlite") -And ($dataProvider -ne "SqlServer")) {
+    $dataProvider = Read-Host -Prompt "Which EntityFrameworkCore data provider would you like to use - Sqlite or SqlServer?"
+}
+
 Write-Host "Creating solution and projects" -ForegroundColor Green
 dotnet new sln
 dotnet new webapi -n API -o src/API
@@ -33,7 +37,7 @@ Set-Location ../../
 
 Write-Host "Adding NuGet packages" -ForegroundColor Green
 $nugetSource = "https://api.nuget.org/v3/index.json
-dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.Sqlite -s $nugetSource
+dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.$dataProvider -s $nugetSource
 dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 
 Write-Host "Executing dotnet restore" -ForegroundColor Green
