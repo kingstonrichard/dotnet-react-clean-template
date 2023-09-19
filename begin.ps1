@@ -37,13 +37,12 @@ Set-Location ../../
 
 Write-Host "Adding NuGet packages" -ForegroundColor Green
 $nugetSource = "https://api.nuget.org/v3/index.json
+dotnet add .\src\Domain\Domain.csproj package Microsoft.AspNetCore.Identity.EntityFrameworkCore -s $nugetSource
 dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.$dataProvider -s $nugetSource
 dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 dotnet add .\src\Application\Application.csproj package AutoMapper.Extensions.Microsoft.DependencyInjection -s $nugetSource
 dotnet add .\src\Application\Application.csproj package FluentValidation.AspNetCore -s $nugetSource
-if ($dataProvider -eq "SqlServer") {
-    dotnet add .\/src\API\API.csproj package Microsoft.AspNetCore.Authentication.Certificate -s $nugetSource
-}
+if ($dataProvider -eq "SqlServer") { dotnet add .\/src\API\API.csproj package Microsoft.AspNetCore.Authentication.Certificate -s $nugetSource }
 
 Write-Host "Executing dotnet restore" -ForegroundColor Green
 dotnet restore
