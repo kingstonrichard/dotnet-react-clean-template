@@ -42,6 +42,7 @@ dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFramewor
 dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 dotnet add .\src\Application\Application.csproj package AutoMapper.Extensions.Microsoft.DependencyInjection -s $nugetSource
 dotnet add .\src\Application\Application.csproj package FluentValidation.AspNetCore -s $nugetSource
+dotnet add .\srcAPI\API.csproj package Microsoft.EntityFrameworkCore.Design -s $nugetSource
 if ($dataProvider -eq "SqlServer") { dotnet add .\/src\API\API.csproj package Microsoft.AspNetCore.Authentication.Certificate -s $nugetSource }
 
 Write-Host "Installing global tools" -ForegroundColor Green
