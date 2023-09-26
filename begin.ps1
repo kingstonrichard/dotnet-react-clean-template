@@ -1,13 +1,17 @@
-while (($dataProvider -ne "Sqlite") -And ($dataProvider -ne "SqlServer")) {
-    $dataProvider = Read-Host -Prompt "Which EntityFrameworkCore data provider would you like to use - Sqlite or SqlServer?"
+while (($useSqlite -ne "Y" -And ($useSqlite -ne "N")) {
+    $useSqlite = Read-Host -Prompt "Does this project require Sqlite? (Y/N)"
+}
+
+while (($useSqlServer -ne "Y" -And ($useSqlServer -ne "N")) {
+    $useSqlServer = Read-Host -Prompt "Does this project require SqlServer? (Y/N)"
 }
 
 Write-Host "Creating solution and projects" -ForegroundColor Green
 dotnet new sln
-dotnet new webapi -n API -o src/API
-dotnet new classlib -n Application -o src/Application
-dotnet new classlib -n Domain -o src/Domain
-dotnet new classlib -n Persistence -o src/Persistence
+dotnet new classlib -n Application -o src/Application        #Interface & Adapters layer
+dotnet new classlib -n Domain -o src/Domain                  #Entities layer
+dotnet new webapi -n API -o src/API                          #Use case layer
+dotnet new classlib -n Persistence -o src/Persistence        #Frameworks & Drivers layer
 
 Write-Host "Tidying up project files" -ForegroundColor Green
 ((Get-Content -path .\src\API\API.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\API\API.csproj
@@ -38,12 +42,19 @@ Set-Location ../../
 Write-Host "Adding NuGet packages" -ForegroundColor Green
 $nugetSource = "https://api.nuget.org/v3/index.json
 dotnet add .\src\Domain\Domain.csproj package Microsoft.AspNetCore.Identity.EntityFrameworkCore -s $nugetSource
-dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.$dataProvider -s $nugetSource
 dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 dotnet add .\src\Application\Application.csproj package AutoMapper.Extensions.Microsoft.DependencyInjection -s $nugetSource
 dotnet add .\src\Application\Application.csproj package FluentValidation.AspNetCore -s $nugetSource
 dotnet add .\srcAPI\API.csproj package Microsoft.EntityFrameworkCore.Design -s $nugetSource
-if ($dataProvider -eq "SqlServer") { dotnet add .\/src\API\API.csproj package Microsoft.AspNetCore.Authentication.Certificate -s $nugetSource }
+if ($useSqlite -eq "Y") 
+{ 
+    dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.Sqlite -s $nugetSource 
+}
+if ($useSqlServer -eq "Y") 
+{ 
+    dotnet add .\src\Persistence\Persistence.csproj package Microsoft.EntityFrameworkCore.SqlServer -s $nugetSource 
+    dotnet add .\/src\API\API.csproj package Microsoft.AspNetCore.Authentication.Certificate -s $nugetSource 
+}
 
 Write-Host "Installing global tools" -ForegroundColor Green
 dotnet tool install --global dotnet-ef
@@ -63,4 +74,5 @@ catch {
 Set-Content .gitignore (Invoke-WebRequest -UseBasicParsing -Uri "https://www.toptal.com/developers/gitignore/api/visualstudio,visualstudiocode,react").Content
 
 Write-Host "Finishing up" -ForegroundColor Green
+Write-Host "Be sure to add your own remote GIT repo URL" - ForegroundColor Green
 Remove-Item begin.ps1
