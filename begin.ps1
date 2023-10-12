@@ -45,6 +45,7 @@ dotnet add .\src\Application\Application.csproj package MediatR -s $nugetSource
 dotnet add .\src\Application\Application.csproj package AutoMapper.Extensions.Microsoft.DependencyInjection -s $nugetSource
 dotnet add .\src\Application\Application.csproj package FluentValidation.AspNetCore -s $nugetSource
 dotnet add .\src\API\API.csproj package System.IdentityModel.Tokens.Jwt -s $nugetSource
+dotnet add .\src\API\API.csproj package Microsoft.AspNetCore.Authentication.JwtBearer -s $nugetSource
 if (($useSqlite -eq 'Y') -Or ($useSqlServer -eq 'Y')) {
     dotnet add .\src\Domain\Domain.csproj package Microsoft.AspNetCore.Identity.EntityFrameworkCore -s $nugetSource
     dotnet add .\src\API\API.csproj package Microsoft.EntityFrameworkCore.Design -s $nugetSource
