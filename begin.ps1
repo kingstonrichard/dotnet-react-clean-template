@@ -8,16 +8,18 @@ while (($useSqlServer -ne 'Y') -And ($useSqlServer -ne 'N')) {
 
 Write-Host 'Creating solution and projects' -ForegroundColor Green
 dotnet new sln
-dotnet new classlib -n Application -o src/Application        #Interface & Adapters layer
-dotnet new classlib -n Domain -o src/Domain                  #Entities layer
-dotnet new webapi -n API -o src/API                          #Use case layer
-dotnet new classlib -n Persistence -o src/Persistence        #Frameworks & Drivers layer
+dotnet new classlib -n Application -o src/Application        # Interface & Adapters layer
+dotnet new classlib -n Domain -o src/Domain                  # Entities layer
+dotnet new webapi -n API -o src/API                          # Use case layer
+dotnet new classlib -n Persistence -o src/Persistence        # Frameworks & Drivers layer
+dotnet new classlib -n Infrastructure -o src/Infrastructure  # 
 
 Write-Host 'Tidying up project files' -ForegroundColor Green
 ((Get-Content -path .\src\API\API.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\API\API.csproj
 ((Get-Content -path .\src\Application\Application.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\Application\Application.csproj
 ((Get-Content -path .\src\Domain\Domain.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\Domain\Domain.csproj
 ((Get-Content -path .\src\Persistence\Persistence.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\Persistence\Persistence.csproj
+((Get-Content -path .\src\Infrastructure\Infrastructure.csproj -Raw) -replace '<Nullable>enable</Nullable>', '<Nullable>disable</Nullable>') | Set-Content -Path .\src\Infrastructure\Infrastructure.csproj
 Remove-Item * -include Class1.cs -Recurse
 Remove-Item * -include WeatherForecast* -Recurse
 
@@ -26,16 +28,20 @@ dotnet sln add src/API/API.csproj
 dotnet sln add src/Application/Application.csproj
 dotnet sln add src/Domain/Domain.csproj
 dotnet sln add src/Persistence/Persistence.csproj
+dotnet sln add src/Infrastructure/Infrastructure.csproj
 #TODO: Add test project here
 
 Write-Host 'Adding references' -ForegroundColor Green
 Set-Location src/API
 dotnet add reference ../Application/Application.csproj
+dotnet add reference ../Infrastructure/Infrastructure.csproj
 Set-Location ../Application
 dotnet add reference ../Domain/Domain.csproj
 dotnet add reference ../Persistence/Persistence.csproj
 Set-Location ../Persistence
 dotnet add reference ../Domain/Domain.csproj
+Set-Location ../Infrastructure
+dotnet add reference ../Application/Application.csproj
 #TODO: Add test project here
 Set-Location ../../
 
